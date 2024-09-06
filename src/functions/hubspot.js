@@ -8,16 +8,12 @@ module.exports = app.http('hubspot', {
     authLevel: 'anonymous',
     handler: async (request, context) => {
         context.log(`Http function processed request for url "${request.url}"`);
-        const name = request.query.get('name');
+        const name = request.query.name || request.body.name;
         let results = [];
         if (name) {
             results = await isSolarChecker(name);
         }
-        console.log(results);
-        // Determine if any of the results are solar-related
         const isSolar = results.some(result => result.isSolar);
-
-        // Return the isSolar boolean as the response
         return { body: JSON.stringify({ isSolar }), headers: { 'Content-Type': 'application/json' } };
     }
 });
